@@ -1,7 +1,8 @@
 #include "Matrix.h"
+#include "RowVector.h"
+#include "ColVector.h"
 #include "ASSERT.h"
 
-/*
 template <unsigned int expectedR,unsigned int expectedC, unsigned int actualR, unsigned int actualC>
 void assertEquals(std::string message,const Matrix<expectedR,expectedC>& expected,const Matrix<actualR,actualC>& actual ){
     if(expected!=actual){
@@ -10,9 +11,7 @@ void assertEquals(std::string message,const Matrix<expectedR,expectedC>& expecte
         std::cerr<<"got: "<<actual<<std::endl;
     }
 }
-*/
 int main(){
-    /*
     Matrix<1,2> a({
         {2,2}
     });
@@ -50,8 +49,6 @@ int main(){
     assertEquals("columnVec to row transpose failed",expectedA_T,a.transpose());
     assertEquals("squareMat transpose failed",expectedB_T,b.transpose());
     assertEquals("rowVec to col transpose failed",expectedC_T,c.transpose());
-    //*/
-
     ASSERT(1==2,"bounds check %d failed",2);
     std::cout<<"asdf"<<std::endl;
     return 0;
