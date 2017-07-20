@@ -1,10 +1,6 @@
 #include <iostream>
 #include <cassert>
 #include <type_traits>
-#ifndef COLVECTINCLUDE
-    #include "ColVector.h"
-    #define COLVECTINCLUDE
-#endif
 template <unsigned int ROWS, unsigned int COLS>
 class Matrix{
 public:
@@ -43,10 +39,6 @@ public:
         }
         return product;
     }
-    template <unsigned int OTHER_COLS>
-    ColVector<COLS> operator *(const ColVector<OTHER_COLS>& other){
-        return (*this)*other;
-    }
 
     Matrix<COLS,ROWS> transpose(){
         Matrix<COLS,ROWS> transposed;
@@ -58,7 +50,8 @@ public:
         return transposed;
     }
 
-    Matrix<ROWS,1> hammondProd(const Matrix<ROWS,1>& other)const {
+    Matrix<ROWS,1> colVectHammondProd(const Matrix<ROWS,1>& other)const {
+        static_assert(COLS==1,"hammondProd only valid for two vectors");
         Matrix<ROWS,1> product;
         for(unsigned int i=0;i<ROWS;i++){
             product.data[i][0]=this->data[i][0]*other.data[i][0];
@@ -66,13 +59,15 @@ public:
         return product;
     }
     double dotProd(const Matrix<ROWS,1>& other) const{
+        static_assert(COLS==1,"dotProd only valid for two vectors");
         double dotP=0;
         for(unsigned int i=0;i<ROWS;i++){
             dotP+=this->data[i][0]*other.data[i][0];
         }
         return dotP;
     }
-    Matrix<1,COLS> hammondProd(const Matrix<1,COLS>& other)const {
+    Matrix<1,COLS> rowVectHammondProd(const Matrix<1,COLS>& other)const {
+        static_assert(ROWS==1,"hammondProd only valid for two vectors");
         Matrix<1,COLS> product;
         for(unsigned int i=0;i<COLS;i++){
             product.data[0][i]=this->data[0][i]*other.data[0][i];
@@ -80,6 +75,7 @@ public:
         return product;
     }
     double dotProd(const Matrix<1,COLS>& other) const{
+        static_assert(ROWS==1,"dotProd only valid for two vectors");
         double dotP=0;
         for(unsigned int i=0;i<COLS;i++){
             dotP+=this->data[0][i]*other.data[0][i];
