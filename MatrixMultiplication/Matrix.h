@@ -50,37 +50,55 @@ public:
         return transposed;
     }
 
-    Matrix<ROWS,1> colVectHammondProd(const Matrix<ROWS,1>& other)const {
+    Matrix<1,1> HammondProd(const Matrix<1,1>& other)const {
+        static_assert(COLS==1&&ROWS==1,"cell HammondProd requires other cell");
+        Matrix<1,1> product;
+        product.data[0][0]=this->data[0][0]*other.data[0][0];
+        return product;
+    }
+    template <unsigned int funcROWS>
+    Matrix<funcROWS,1> HammondProd(const Matrix<funcROWS,1>& other)const {
         static_assert(COLS==1,"hammondProd only valid for two vectors");
-        Matrix<ROWS,1> product;
-        for(unsigned int i=0;i<ROWS;i++){
+        static_assert(funcROWS==ROWS,"Vectors must be the same size");
+        Matrix<funcROWS,1> product;
+        for(unsigned int i=0;i<funcROWS;i++){
             product.data[i][0]=this->data[i][0]*other.data[i][0];
         }
         return product;
     }
-    double dotProd(const Matrix<ROWS,1>& other) const{
-        static_assert(COLS==1,"dotProd only valid for two vectors");
-        double dotP=0;
-        for(unsigned int i=0;i<ROWS;i++){
-            dotP+=this->data[i][0]*other.data[i][0];
-        }
-        return dotP;
-    }
-    Matrix<1,COLS> rowVectHammondProd(const Matrix<1,COLS>& other)const {
+    template <unsigned int funcCOLS>
+    Matrix<1,funcCOLS> HammondProd(const Matrix<1,funcCOLS>& other)const {
         static_assert(ROWS==1,"hammondProd only valid for two vectors");
-        Matrix<1,COLS> product;
-        for(unsigned int i=0;i<COLS;i++){
+        static_assert(funcCOLS==COLS,"Vectors must be the same size");
+        Matrix<1,funcCOLS> product;
+        for(unsigned int i=0;i<funcCOLS;i++){
             product.data[0][i]=this->data[0][i]*other.data[0][i];
         }
         return product;
     }
-    double dotProd(const Matrix<1,COLS>& other) const{
-        static_assert(ROWS==1,"dotProd only valid for two vectors");
+    template <unsigned int funcROWS>
+    double dotProd(const Matrix<funcROWS,1>& other) const{
+        static_assert(COLS==1,"dotProd only valid for two vectors");
+        static_assert(funcROWS==ROWS,"Vectors must be the same size");
         double dotP=0;
-        for(unsigned int i=0;i<COLS;i++){
+        for(unsigned int i=0;i<funcROWS;i++){
+            dotP+=this->data[i][0]*other.data[i][0];
+        }
+        return dotP;
+    }
+    template <unsigned int funcCOLS>
+    double dotProd(const Matrix<1,funcCOLS>& other) const{
+        static_assert(ROWS==1,"dotProd only valid for two vectors");
+        static_assert(funcCOLS==COLS,"Vectors must be the same size");
+        double dotP=0;
+        for(unsigned int i=0;i<funcCOLS;i++){
             dotP+=this->data[0][i]*other.data[0][i];
         }
         return dotP;
+    }
+    double dotProd(const Matrix<1,1>& other)const {
+        static_assert(COLS==1&&ROWS==1,"cell dotProd requires other cell");
+        return this->data[0][0]*other.data[0][0];
     }
 
     friend std::ostream& operator<<(std::ostream& os,const Matrix<ROWS,COLS>& mat){
@@ -140,3 +158,9 @@ private:
         *this=toCopy;
     }
 };
+
+
+template <unsigned int NUMELEMENTS>
+using ColVector=Matrix<NUMELEMENTS,1>;
+template <unsigned int NUMELEMENTS>
+using RowVector=Matrix<1,NUMELEMENTS>;
